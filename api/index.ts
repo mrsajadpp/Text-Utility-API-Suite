@@ -17,7 +17,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type"] // Allow specific headers
 }));
 
-app.get("/ping", (req, res) => res.send("Hello world"));
+app.get("/ping", (req, res) => res.status(200).send("Hello world"));
 
 app.post("/api/pargraph/summery", async (req, res) => {
     try {
