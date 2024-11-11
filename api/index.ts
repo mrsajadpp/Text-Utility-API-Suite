@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const bp = require('body-parser');
-const cors = require("cors"); 
+const cors = require("cors");
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
@@ -17,7 +17,13 @@ app.use(cors({
     allowedHeaders: ["Content-Type"] // Allow specific headers
 }));
 
-app.get("/ping", (req, res) => res.status(200).send("Hello world"));
+app.get('/ping', (req, res) => {
+    res.status(200).send({
+        message: 'Hello world',
+        status: 'OK',
+        timestamp: new Date().toISOString()
+    });
+});
 
 app.post("/api/pargraph/summery", async (req, res) => {
     try {
