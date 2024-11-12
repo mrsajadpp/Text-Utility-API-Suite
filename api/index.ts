@@ -4,19 +4,31 @@ const app = express();
 const bp = require('body-parser');
 const cors = require("cors");
 
-const RapidAPIClient = require('@rapidapi/client');
-const rapidAPIClient = new RapidAPIClient('fa540bc0-a04e-11ef-add5-79ef3c7abc15');
+function authenticateRequest(req, res, next) {
+    const rapidApiKey = req.headers['x-rapidapi-key'];
+    const rapidApiHost = req.headers['x-rapidapi-host'];
 
-function verifyRapidAPIKey(req, res, next) {
-  const rapidAPIKey = req.get('x-rapidapi-key');
-  rapidAPIClient.validateKey(rapidAPIKey)
-    .then(() => {
-      next(); // Allow the request to proceed
-    })
-    .catch((err) => {
-      res.status(401).json({ error: 'Invalid x-rapidapi-key' });
-    });
+    // Check if the headers are present
+    if (!rapidApiKey || !rapidApiHost) {
+        return res.status(401).json({
+            error: 'Missing RapidAPI authentication headers'
+        });
+    }
+
+    // If headers are present, proceed
+    next();
 }
+
+function limitRequestsByPlan(req, res, next) {
+    const requestsLimit = req.get('x-ratelimit-requests-limit');
+    const requestsRemaining = req.get('x-ratelimit-requests-remaining');
+  
+    if (requestsRemaining > 0) {
+      next(); // Allow the request to proceed
+    } else {
+      res.status(429).json({ error: 'Rate limit exceeded' });
+    }
+  }
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
