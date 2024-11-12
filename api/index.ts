@@ -4,6 +4,20 @@ const app = express();
 const bp = require('body-parser');
 const cors = require("cors");
 
+const RapidAPIClient = require('@rapidapi/client');
+const rapidAPIClient = new RapidAPIClient('fa540bc0-a04e-11ef-add5-79ef3c7abc15');
+
+function verifyRapidAPIKey(req, res, next) {
+  const rapidAPIKey = req.get('x-rapidapi-key');
+  rapidAPIClient.validateKey(rapidAPIKey)
+    .then(() => {
+      next(); // Allow the request to proceed
+    })
+    .catch((err) => {
+      res.status(401).json({ error: 'Invalid x-rapidapi-key' });
+    });
+}
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY); // Replace with your actual API key
@@ -25,7 +39,7 @@ app.get('/ping', (req, res) => {
     });
 });
 
-app.post("/api/pargraph/summery", async (req, res) => {
+app.post("/api/pargraph/summery", verifyRapidAPIKey, async (req, res) => {
     try {
         if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for summarization." });
         const result = await model.generateContent(`Summarize the following text in a concise paragraph:\n\n${req.body.content}. Provide only the summary paragraph without any introductory words or explanations.`);
