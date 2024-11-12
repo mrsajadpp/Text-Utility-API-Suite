@@ -4,32 +4,6 @@ const app = express();
 const bp = require('body-parser');
 const cors = require("cors");
 
-function authenticateRequest(req, res, next) {
-    const rapidApiKey = req.headers['x-rapidapi-key'];
-    const rapidApiHost = req.headers['x-rapidapi-host'];
-
-    // Check if the headers are present
-    if (!rapidApiKey || !rapidApiHost) {
-        return res.status(401).json({
-            error: 'Missing RapidAPI authentication headers'
-        });
-    }
-
-    // If headers are present, proceed
-    next();
-}
-
-function limitRequestsByPlan(req, res, next) {
-    const requestsLimit = req.get('x-ratelimit-requests-limit');
-    const requestsRemaining = req.get('x-ratelimit-requests-remaining');
-  
-    if (requestsRemaining > 0) {
-      next(); // Allow the request to proceed
-    } else {
-      res.status(429).json({ error: 'Rate limit exceeded' });
-    }
-  }
-
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY); // Replace with your actual API key
@@ -51,7 +25,7 @@ app.get('/ping', (req, res) => {
     });
 });
 
-app.post("/api/pargraph/summery", verifyRapidAPIKey, async (req, res) => {
+app.post("/api/pargraph/summery", async (req, res) => {
     try {
         if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for summarization." });
         const result = await model.generateContent(`Summarize the following text in a concise paragraph:\n\n${req.body.content}. Provide only the summary paragraph without any introductory words or explanations.`);
