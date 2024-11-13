@@ -107,13 +107,17 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/paragraph/generate",
 }
 ```
 
----
-
 ### 4. Title Generator API
 
 **Endpoint**: `/api/title/generate`  
 **Method**: `POST`  
-**Description**: Generates four title suggestions based on provided content, with each title having a unique tone or format.
+**Description**: Generates four unique title suggestions based on provided content. Each title can vary in tone, style, and context to match different purposes, such as articles, YouTube videos, blogs, or stories.
+
+#### Parameters
+- **content** (string, required): The main topic or text to generate titles for.
+- **tone** (string, optional): The desired tone of the titles. Examples include "informative," "casual," "motivational," "formal," etc.
+- **style** (string, optional): The style or approach of the titles, such as "catchy," "thought-provoking," "conversational," "educational," etc.
+- **context** (string, optional): The target context for the titles, like "article," "YouTube," "blog," "story," etc.
 
 #### Example Request
 ```javascript
@@ -125,7 +129,10 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/title/generate", {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        content: "Text for generating titles..."
+        content: "The Importance of Cybersecurity in Today's Digital World",
+        tone: "informative",
+        style: "thought-provoking",
+        context: "article"
     })
 })
 ```
@@ -133,7 +140,12 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/title/generate", {
 #### Example Response
 ```json
 {
-  "response": "Generated titles"
+    "response": [
+        "Safeguarding Our Future: Why Cybersecurity Matters More Than Ever",
+        "Cybersecurity in the Digital Age: A Necessity for All",
+        "Protecting the Digital World: The Role of Cybersecurity Today",
+        "Beyond Firewalls: The Growing Importance of Cybersecurity Awareness"
+    ]
 }
 ```
 

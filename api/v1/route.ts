@@ -67,15 +67,14 @@ router.post("/api/paragraph/generate", async (req, res) => {
 
 router.post("/api/title/generate", async (req, res) => {
     try {
-        if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for  title generation." });
-        const result = await model.generateContent(`Generate four unique title suggestions for "${req.body.content}". Each title should use a different tone or format. Provide only the titles, without any introductory text or explanations.`);
+        const { content, tone = "neutral", style = "general", context = "blog" } = req.body;
+        if (!content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for  title generation." });
+        const result = await model.generateContent(`
+            Generate four unique title suggestions for "${content}". Each title should be suitable for ${context} content, using a distinct tone or format. 
+            Tone: ${tone}. Style: ${style}.
+            Provide only the titles, without any introductory text or explanations.
+        `);
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0]) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a title. Please try again later." });
-
-        // let title = result.response.candidates[0].content.parts[0].text
-        //     .replace(/^.*?(title|titles)\s+(for|suggestion).*?:?\s*/i, '') // Remove "Titles for", "Title suggestion for", etc.
-        //     .replace(/^#+\s*/, '') // Remove markdown headers like "##" or "#"
-        //     .trim()
-        //     .split("\n")[0]; // Only the first line
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });
     } catch (error) {
         console.error("Error generating content:", error);
