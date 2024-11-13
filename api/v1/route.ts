@@ -72,10 +72,17 @@ router.post("/api/title/generate", async (req, res) => {
         const result = await model.generateContent(`
             Generate four unique title suggestions for "${content}". Each title should be suitable for ${context} content, using a distinct tone or format. 
             Tone: ${tone}. Style: ${style}.
-            Provide only the titles, without any introductory text or explanations.
+            Provide only the titles in a JSON array format, with each title as a separate string in the array. Do not include any introductory text or explanations.
         `);
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0]) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a title. Please try again later." });
-        res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });
+
+        const titles = JSON.parse(result.response.candidates[0].content.parts[0].text.trim());
+
+        if (!Array.isArray(titles) || titles.length === 0) {
+            return res.status(500).json({ error: "Processing Error", message: "The response was not in the expected format." });
+        }
+
+        res.status(200).json({ response: titles });
     } catch (error) {
         console.error("Error generating content:", error);
         res.status(500).json({
@@ -87,8 +94,10 @@ router.post("/api/title/generate", async (req, res) => {
 
 router.post("/api/caption/generate", async (req, res) => {
     try {
-        if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for caption generation" });
-        const result = await model.generateContent(`Create a catchy and engaging social media caption based on the following content:\n\n${req.body.content}. Provide only the caption text without any additional explanations or introductory phrases.`);
+        const { content, style = "engaging", context = "Instagram" } = req.body;
+
+        if (!content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for caption generation" });
+        const result = await model.generateContent(`Create a ${style} social media caption for ${context} based on the following content:\n\n${content}. Provide only the caption text without any additional explanations or introductory phrases.`);
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0]) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a caption. Please try again later." });
 
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });

@@ -155,7 +155,12 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/title/generate", {
 
 **Endpoint**: `/api/caption/generate`  
 **Method**: `POST`  
-**Description**: Generates a catchy social media caption based on input text.
+**Description**: Generates a catchy social media caption based on input text, with customizable style and context options for different platforms like Instagram, LinkedIn, etc.
+
+#### Request Body Parameters
+- **content** (string, required): The main text or idea for generating the caption.
+- **style** (string, optional): The desired tone or style for the caption (e.g., "engaging", "motivational", "funny", "casual"). Default is "engaging".
+- **context** (string, optional): The platform or context for the caption (e.g., "Instagram", "LinkedIn", "Twitter", "Facebook"). Default is "Instagram".
 
 #### Example Request
 ```javascript
@@ -167,7 +172,9 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/caption/generate", {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        content: "Text for caption generation..."
+        content: "The importance of teamwork in achieving success in any project.",
+        style: "motivational",
+        context: "LinkedIn"
     })
 })
 ```
@@ -175,11 +182,11 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/caption/generate", {
 #### Example Response
 ```json
 {
-  "response": "Generated catchy caption for social media."
+  "response": "Great things are never achieved alone. Teamwork is the key to success! #Teamwork #Success #Leadership"
 }
 ```
 
----
+--- 
 
 ## Error Handling
 Each endpoint provides structured error responses for missing parameters or processing issues. Common error responses include:
