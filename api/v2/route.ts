@@ -6,14 +6,6 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.API_KEY); // Replace with your actual API key
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-router.get('/ping', (req, res) => {
-    res.status(200).send({
-        message: 'Hello world',
-        status: 'OK',
-        timestamp: new Date().toISOString()
-    });
-});
-
 router.post("/api/pargraph/summery", async (req, res) => {
     try {
         if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for summarization." });

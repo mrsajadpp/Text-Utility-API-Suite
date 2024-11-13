@@ -13,6 +13,14 @@ app.use(cors({
     allowedHeaders: ["Content-Type"] // Allow specific headers
 }));
 
+app.get('/ping', (req, res) => {
+    res.status(200).send({
+        message: 'Hello world',
+        status: 'OK',
+        timestamp: new Date().toISOString()
+    });
+});
+
 app.use('/v1/', require('./v1/route'));
 app.use('/v2/', require('./v2/route'));
 
