@@ -76,7 +76,12 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/paragraph/summary", 
 
 **Endpoint**: `/api/paragraph/generate`  
 **Method**: `POST`  
-**Description**: Generates a single, well-structured paragraph based on the given content in `content`.
+**Description**: Generates a single, well-structured paragraph based on the provided content. This endpoint also allows optional customization of the paragraph's tone and style.
+
+#### Parameters
+- **content** (string, required): The text or topic to expand into a paragraph.
+- **tone** (string, optional): Defines the length or tone of the paragraph. Options include `"short"`, `"medium"`, `"long"`, `"brief"`, `"concise"`. Default is `"concise"`.
+- **style** (string, optional): Specifies the style of the paragraph. Options include `"formal"`, `"friendly"`, `"lovely"`, `"neutral"`. Default is `"neutral"`.
 
 #### Example Request
 ```javascript
@@ -88,7 +93,9 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/paragraph/generate",
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        content: "Topic or text to expand upon..."
+        content: "Topic or text to expand upon...",
+        tone: "medium",         // Optional tone
+        style: "formal"          // Optional style
     })
 })
 ```

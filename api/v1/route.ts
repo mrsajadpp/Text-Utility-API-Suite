@@ -25,7 +25,7 @@ router.post("/api/pargraph/summery", async (req, res) => {
             case "brief":
                 toneInstruction = "Summarize the text very briefly in a couple of sentences:";
                 break;
-            default: 
+            default:
                 toneInstruction = "Summarize the following text concisely:";
         }
 
@@ -44,8 +44,15 @@ router.post("/api/pargraph/summery", async (req, res) => {
 
 router.post("/api/paragraph/generate", async (req, res) => {
     try {
-        if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for paragraph generation" });
-        const result = await model.generateContent(`Generate a single, well-constructed paragraph based on the following content:\n\n${req.body.content}. Provide only the paragraph text itself, without any introductory phrases or additional explanations.`);
+        const { content, tone = "concise", style = "neutral" } = req.body;
+
+        if (!content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for paragraph generation" });
+        const result = await model.generateContent(`
+            Generate a single, well-constructed paragraph based on the following content:
+            \n\n${content}\n\n
+            The paragraph should be written in a ${tone} tone and a ${style} style. 
+            Provide only the paragraph text itself, without any introductory phrases or additional explanations.
+        `);
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0]) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a paragraph. Please try again later." });
 
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });
