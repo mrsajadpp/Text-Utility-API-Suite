@@ -14,6 +14,7 @@ app.use(cors({
 }));
 
 app.use('/v1/', require('./v1/route'));
+app.use('/v2/', require('./v2/route'));
 
 app.get("*", (req, res) => res.status(404).json({
     error: "Not Found",
