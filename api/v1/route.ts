@@ -8,8 +8,28 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 router.post("/api/pargraph/summery", async (req, res) => {
     try {
-        if (!req.body.content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for summarization." });
-        const result = await model.generateContent(`Summarize the following text in a concise paragraph:\n\n${req.body.content}. Provide only the summary paragraph without any introductory words or explanations.`);
+        const { content, tone = "concise" } = req.body;
+        if (!content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for summarization." });
+
+        let toneInstruction = "";
+        switch (tone.toLowerCase()) {
+            case "short":
+                toneInstruction = "Summarize the following text in a single, concise paragraph:";
+                break;
+            case "medium":
+                toneInstruction = "Summarize the following text in a moderate-length paragraph, including key details:";
+                break;
+            case "long":
+                toneInstruction = "Provide a detailed summary of the following text in a full paragraph:";
+                break;
+            case "brief":
+                toneInstruction = "Summarize the text very briefly in a couple of sentences:";
+                break;
+            default: 
+                toneInstruction = "Summarize the following text concisely:";
+        }
+
+        const result = await model.generateContent(`${toneInstruction}:\n\n${content}. Provide only the summary paragraph without any introductory words or explanations.`);
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0]) return res.status(500).json({ error: "Processing Error", message: "Failed to generate summary. Please try again later." });
 
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });

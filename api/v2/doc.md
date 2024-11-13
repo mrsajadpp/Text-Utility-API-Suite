@@ -4,7 +4,7 @@ The **Text Utility API Suite** provides a powerful set of tools for text process
 
 ## Base URL
 ```plaintext
-https://text-utility-api-suite.p.rapidapi.com/v1/
+https://text-utility-api-suite.p.rapidapi.com/v2/
 ```
 
 ## Endpoints Overview
@@ -17,7 +17,7 @@ https://text-utility-api-suite.p.rapidapi.com/v1/
 
 #### Example Request
 ```javascript
-fetch("https://text-utility-api-suite.p.rapidapi.com/v1/ping", {
+fetch("https://text-utility-api-suite.p.rapidapi.com/ping", {
     method: "GET",
     headers: {
         "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
@@ -45,7 +45,7 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/ping", {
 
 #### Example Request
 ```javascript
-fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/pargraph/summery", {
+fetch("https://text-utility-api-suite.p.rapidapi.com/v2/api/pargraph/summery", {
     method: "POST",
     headers: {
         "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
@@ -75,7 +75,7 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/pargraph/summery", {
 
 #### Example Request
 ```javascript
-fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/paragraph/generate", {
+fetch("https://text-utility-api-suite.p.rapidapi.com/v2/api/paragraph/generate", {
     method: "POST",
     headers: {
         "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
@@ -105,7 +105,7 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/paragraph/generate",
 
 #### Example Request
 ```javascript
-fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/title/generate", {
+fetch("https://text-utility-api-suite.p.rapidapi.com/v2/api/title/generate", {
     method: "POST",
     headers: {
         "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
@@ -135,7 +135,7 @@ fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/title/generate", {
 
 #### Example Request
 ```javascript
-fetch("https://text-utility-api-suite.p.rapidapi.com/v1/api/caption/generate", {
+fetch("https://text-utility-api-suite.p.rapidapi.com/v2/api/caption/generate", {
     method: "POST",
     headers: {
         "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
