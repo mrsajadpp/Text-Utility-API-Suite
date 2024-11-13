@@ -30,6 +30,12 @@ router.post("/api/pargraph/summery", async (req, res) => {
         }
 
         const result = await model.generateContent(`${toneInstruction}:\n\n${content}. Provide only the summary paragraph without any introductory words or explanations.`);
+        if (result?.response?.candidates[0]?.finishReason === 'SAFETY') {
+            return res.status(400).json({
+                error: "Safety Filter Triggered",
+                message: "The content request was flagged by the safety filter. Please adjust the content and try again."
+            });
+        }
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0] || !result.response.candidates[0].content || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts[0].text) return res.status(500).json({ error: "Processing Error", message: "Failed to generate summary. Please try again later." });
 
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });
@@ -53,6 +59,14 @@ router.post("/api/paragraph/generate", async (req, res) => {
             The paragraph should be written in a ${tone} tone and a ${style} style. 
             Provide only the paragraph text itself, without any introductory phrases or additional explanations.
         `);
+
+        if (result?.response?.candidates[0]?.finishReason === 'SAFETY') {
+            return res.status(400).json({
+                error: "Safety Filter Triggered",
+                message: "The content request was flagged by the safety filter. Please adjust the content and try again."
+            });
+        }
+
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0] || !result.response.candidates[0].content || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts[0].text) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a paragraph. Please try again later." });
 
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });
@@ -74,6 +88,14 @@ router.post("/api/title/generate", async (req, res) => {
             Tone: ${tone}. Style: ${style}.
             Provide only the titles in a JSON array format, with each title as a separate string in the array. Do not include any introductory text or explanations.
         `);
+
+        if (result?.response?.candidates[0]?.finishReason === 'SAFETY') {
+            return res.status(400).json({
+                error: "Safety Filter Triggered",
+                message: "The content request was flagged by the safety filter. Please adjust the content and try again."
+            });
+        }
+
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0] || !result.response.candidates[0].content || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts[0].text) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a title. Please try again later." });
 
         const titles = JSON.parse(result.response.candidates[0].content.parts[0].text.trim());
@@ -98,6 +120,14 @@ router.post("/api/caption/generate", async (req, res) => {
 
         if (!content) return res.status(400).json({ error: "Invalid Request", message: "Content is required for caption generation" });
         const result = await model.generateContent(`Create a ${style} social media caption for ${context} based on the following content:\n\n${content}. Provide only the caption text without any additional explanations or introductory phrases.`);
+
+        if (result?.response?.candidates[0]?.finishReason === 'SAFETY') {
+            return res.status(400).json({
+                error: "Safety Filter Triggered",
+                message: "The content request was flagged by the safety filter. Please adjust the content and try again."
+            });
+        }
+
         if (!result || !result.response || !result.response.candidates || !result.response.candidates[0] || !result.response.candidates[0].content || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts || !result.response.candidates[0].content.parts[0].text) return res.status(500).json({ error: "Processing Error", message: "Failed to generate a caption. Please try again later." });
 
         res.status(200).json({ response: result.response.candidates[0].content.parts[0].text });
