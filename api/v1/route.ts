@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const genAI = new GoogleGenerativeAI(process.env.API_KEY); // Replace with your actual API key
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 router.get('/ping', (req, res) => {
     res.status(200).send({
         message: 'Hello world',
